@@ -1,0 +1,40 @@
+
+
+## 🧾 Headwind MDM POC Progress Report
+
+### ✅ **Completed Steps**
+
+| Step | Description                                                                  | Status                      |
+| ---- | ---------------------------------------------------------------------------- | --------------------------- |
+| 1    | Installed **Docker Desktop** on Windows                                      | ✅ Done                      |
+| 2    | Verified **Docker Engine running** successfully                              | ✅ Done                      |
+| 3    | Downloaded & configured **Headwind MDM Docker setup** (`docker-compose.yml`) | ✅ Done                      |
+| 4    | Pulled latest **PostgreSQL (v13)** and **Headwind MDM** images               | ✅ Done                      |
+| 5    | Brought up containers using `docker-compose up -d`                           | ✅ Done                      |
+| 6    | Verified both containers are active (`hmdm-db-1`, `hmdm-web-1`)              | ✅ Done                      |
+| 7    | Confirmed database initialization & web service startup in logs              | ✅ Done                      |
+| 8    | Accessed **Web UI** at `http://localhost:8080`                               | ✅ Done (login page visible) |
+| 9    | Verified **PostgreSQL schema** creation and user data exists                 | ✅ Done                      |
+
+---
+
+### ⚠️ **Pending / Blocked Steps**
+
+| Area                 | Description                                         | Current Issue                                                 |
+| -------------------- | --------------------------------------------------- | ------------------------------------------------------------- |
+| 🔐 Admin Login       | Login with `admin / admin` fails                    | Likely due to incorrect password hash or missing role mapping |
+| 👤 User Role         | Need to confirm `userroleid` for admin user         | Table exists but may not have correct reference               |
+| 💻 Dashboard Access  | Cannot reach MDM dashboard without successful login | Blocked by authentication failure                             |
+| 📱 Device Enrollment | Cannot connect or test real Android devices         | Depends on dashboard access                                   |
+| 🔧 Optional SSL      | Currently disabled (`USE_SSL=false`)                | Not blocking, but needed for production setup later           |
+
+---
+
+### 🧩 **Root Cause (Likely)**
+
+* The `admin` user’s password hash (`md5('admin')`) is correct in DB.
+* But the `userroleid` might not be properly linked to an existing role in the `userroles` table.
+* Without a valid role, authentication passes the password check but fails on role validation internally.
+
+
+
